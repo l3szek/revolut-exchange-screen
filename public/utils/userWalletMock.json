@@ -1,0 +1,22 @@
+{ 
+  "userWallet": [
+    {
+      "currency": "EUR",
+      "availableMoney": 1000
+    },
+    {
+      "currency": "GBP",
+      "availableMoney": 1000
+    },
+    {
+      "currency": "USD",
+      "availableMoney": 1000
+    },
+    {
+      "currency": "PLN",
+      "availableMoney": 1000
+    }
+  ],
+  "defaultCurrency": "EUR",
+  "userDefaultCurrency": "PLN"
+}
