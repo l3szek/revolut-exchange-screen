@@ -2,22 +2,29 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
-import { fetchUserWallet } from './actions/actions';
+import { useInterval } from './utils/useInterval';
+import { fetchUserWallet, getRatesForAllCurrencies } from './actions/actions';
 
 import type { AppState } from './reducers/rootReducer';
 import type { Dispatch } from './constants/common';
 
 type Props = {
   userWallet: Array<any>,
-  getuserWallet: Function,
+  getUserWallet: Function,
+  getAllCurrencyRates: Function,
 }
 
 const App = (props: Props) => {
-  const { userWallet, getuserWallet } = props;
+  const { userWallet, getUserWallet, getAllCurrencyRates } = props;
+
   useEffect(() => {
-    getuserWallet();
-  }, []);
+    getUserWallet();
+  }, [getUserWallet]);
   
+  useInterval(() => {
+    getAllCurrencyRates();
+  }, 10000);
+
   return (
     <div>
       <h1>Revolut exchange </h1>
@@ -28,11 +35,15 @@ const App = (props: Props) => {
 
 
 const mapStateToProps = (state: AppState): $Shape<Props> => ({
-  userWallet: state.userWallet
+  userWallet: state.wallet.userWallet
 });
 
 const mapDispatchToProps = (dispatch: Dispatch): $Shape<Props> => ({
-  getuserWallet: () => dispatch(fetchUserWallet())
+  getUserWallet: () => {
+    dispatch(fetchUserWallet())
+      .then(() => dispatch(getRatesForAllCurrencies()));
+  },
+  getAllCurrencyRates: () => dispatch(getRatesForAllCurrencies())
 });
 
 export default connect(

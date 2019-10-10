@@ -1,46 +1,23 @@
 // @flow
-import { types } from '../actions/actionTypes';
+import { combineReducers } from 'redux';
+import wallet from './wallet';
+import calculator from './calculator';
+import currencies from './currencies';
+
+import type { WalletState } from './wallet';
+import type { CalculatorState } from './calculator';
+import type { CurrenciesState } from './currencies';
 
 export type AppState = {
-  fetchingExchangeRates: boolean,
-  userWallet: Array<any>,
-  defaultCurrency: string,
-  userDefaultCurrency: string,
-  calculator: {
-    currencyFrom: string,
-    currencyTo: string,
-  },
-};
+  wallet: WalletState,
+  calculator: CalculatorState,
+  currencies: CurrenciesState
+}
 
-const initialState = {
-  fetchingExchangeRates: false,
-  userWallet: [],
-  defaultCurrency: '',
-  userDefaultCurrency: '',
-  calculator: {
-    currencyFrom: '',
-    currencyTo: '',
-  },
-};
+const rootReducer: AppState = combineReducers({
+  wallet,
+  calculator,
+  currencies,
+});
 
-export default (state: AppState = { ...initialState }, action: Object) => {
-  switch (action.type) {
-    case types.FETCHING_EXCHANGE_RATES_START:
-      return { ...state, fetchingExchangeRates: true };
-    
-    case types.FETCHING_EXCHANGE_RATES_SUCCESS: 
-      return { ...state, fetchingExchangeRates: false };
-    
-    case types.FETCHING_WALLET_SUCCESS: {  
-      const { defaultCurrency, userWallet, userDefaultCurrency } = action.userDetails;
-      const calculator = {
-        currencyFrom: userDefaultCurrency,
-        currencyTo: defaultCurrency,
-      }
-      return { ...state, userDefaultCurrency, defaultCurrency, userWallet, calculator: calculator }
-    };
-      
-    default:
-      return state;
-  }
-};
+export default rootReducer;

@@ -1,18 +1,52 @@
-import { types } from './actionTypes';
 import axios from 'axios';
+import { types } from './actionTypes';
 
-export const fetchUserWallet = () => (dispatch) => {
+import type { AppState } from '../reducers/rootReducer';
+import type { Dispatch } from '../constants/common';
+
+export const fetchUserWallet = () => (dispatch: Dispatch) => {
   dispatch({type: types.FETCHING_WALLET_START});
   // in real-life scenario, the below would make an API call to fetch the user's wallet
   // for the purpose of this app, I have created a mock of user wallet in a JSON file
-  axios.get('/utils/userWalletMock.json')
-    .then(function (response) {
-      dispatch({
-        type: types.FETCHING_WALLET_SUCCESS,
-        userDetails: response.data
-      });
+  return axios.get('/utils/userWalletMock.json')
+  .then(function (response) {
+    dispatch({
+      type: types.FETCHING_WALLET_SUCCESS,
+      userDetails: response.data
+    });
   })
   .catch(function (error) {
     console.log(error);
   });
 }
+
+export const getLatestRatessForCurrency = (currencyCode) => (dispatch: Dispatch) => {
+  dispatch({
+    type: types.FETCHING_EXCHANGE_RATES_START,
+    currency: currencyCode,
+  });
+  return axios.get('https://api.exchangeratesapi.io/latest', {
+    params: {
+      base: currencyCode
+    }
+  })
+  .then(function (response) {
+    dispatch({
+      type: types.FETCHING_EXCHANGE_RATES_SUCCESS,
+      currency: currencyCode,
+      response: response.data.rates
+    })
+  })
+  .catch(function (error) {
+    console.log(error);
+  })
+}
+
+export const getRatesForAllCurrencies = () =>
+  (dispatch: Dispatch, getState: () => AppState): void => { 
+    const state = getState();
+    const { userWallet } = state.wallet;
+    userWallet.forEach(item =>
+      dispatch(getLatestRatessForCurrency(item.currency))
+    );
+  }
