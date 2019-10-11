@@ -2,19 +2,23 @@
   "userWallet": [
     {
       "currency": "EUR",
-      "availableMoney": 1000
+      "availableMoney": 35000.25,
+      "symbol": "€"
     },
     {
       "currency": "GBP",
-      "availableMoney": 1000
+      "availableMoney": 980.00,
+      "symbol": "£"
     },
     {
       "currency": "USD",
-      "availableMoney": 1000
+      "availableMoney": 10000.50,
+      "symbol": "$"
     },
     {
       "currency": "PLN",
-      "availableMoney": 1000
+      "availableMoney": 5500.00,
+      "symbol": "zł"
     }
   ],
   "defaultCurrency": "EUR",

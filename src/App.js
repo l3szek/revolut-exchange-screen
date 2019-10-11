@@ -1,27 +1,41 @@
 // @flow
 import React, { Fragment, useEffect } from 'react';
 import { connect } from 'react-redux';
-
-import { useInterval } from './utils/useInterval';
-import { fetchUserWallet, getRatesForAllCurrencies, selectAmountFrom } from './actions/actions';
-
+import { makeStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
-import CalculatorInput from './components/CalculatorInput';
 
-import type { AppState } from './reducers/rootReducer';
+import { useInterval } from './utils/useInterval';
+import { fetchUserWallet, getRatesForAllCurrencies } from './actions/actions';
+
+import CalculatorScreen from './components/CalculatorScreen';
+
 import type { Dispatch } from './constants/common';
 
 type Props = {
-  userWallet: Array<any>,
   getUserWallet: Function,
   getAllCurrencyRates: Function,
-  onChangeAmount: Function,
-  currentValue: string,
 }
 
+const useStyles = makeStyles(theme => ({
+  title: {
+    padding: 20,
+  },
+  container: {
+    marginTop: 20,
+    marginBottom: 20,
+    background: '#FFFFFF',
+    borderRadius: 4,
+    paddingLeft: 0,
+    paddingRight: 0,
+  },
+}));
+
 const App = (props: Props) => {
-  const { userWallet, getUserWallet, getAllCurrencyRates, onChangeAmount, currentValue } = props;
+  const { getUserWallet, getAllCurrencyRates } = props;
+  const classes = useStyles();
 
   useEffect(() => {
     getUserWallet();
@@ -34,23 +48,15 @@ const App = (props: Props) => {
   return (
     <Fragment>
       <CssBaseline />
-      <Container maxWidth="sm">
-        <h1>Revolut exchange </h1>
-        <CalculatorInput
-          onChangeAmount={onChangeAmount}
-          currentValue={currentValue}
-          currencies={userWallet}
-        />
+      <Container className={classes.container} maxWidth="sm">
+        <Grid>
+          <Typography className={classes.title} variant="h5">Exchange</Typography>
+        </Grid>
+        <CalculatorScreen />
       </Container>
     </Fragment>
   );
 }
-
-
-const mapStateToProps = (state: AppState): $Shape<Props> => ({
-  userWallet: state.wallet.userWallet,
-  currentValue: state.calculator.amountFrom
-});
 
 const mapDispatchToProps = (dispatch: Dispatch): $Shape<Props> => ({
   getUserWallet: () => {
@@ -58,13 +64,9 @@ const mapDispatchToProps = (dispatch: Dispatch): $Shape<Props> => ({
       .then(() => dispatch(getRatesForAllCurrencies()));
   },
   getAllCurrencyRates: () => dispatch(getRatesForAllCurrencies()),
-  onChangeAmount: (e: SyntheticInputEvent<HTMLInputElement>) => {
-    console.log('on amount change: '+ e.target.value);
-    dispatch(selectAmountFrom(e.target.value));
-  },
 });
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps,
 )(App);

@@ -1,21 +1,26 @@
 // @flow
 
 import React from 'react';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 
 import AmountInput from './AmountInput';
 import CurrencySelect from './CurrencySelect';
-
+import AvailableCurrency from './AvailableCurrency';
 
 type Props = {
-  onChangeAmount: Function,
+  userWallet: Array<any>,
+  onCurrencyChange: SyntheticInputEvent<*> => any,
+  currency: string,
+  onChangeAmount: SyntheticInputEvent<*> => any,
   currentValue: string | number,
+  selectedCurrency: Object,
+  autoFocus?: boolean,
 }
 
 const useStyles = makeStyles(theme => ({
-  marginTop10: {
+  marginTop20: {
     marginTop: 20,
   },
   root: {
@@ -33,39 +38,40 @@ const useStyles = makeStyles(theme => ({
       fontSize: 40,
     }
   },
-  width: {
-    width: 300,
+  amountInput: {
+    maxWidth: 320,
+    '& .MuiInput-input': {
+      textAlign: 'right',
+    }
   }
 }));
 
 const CalculatorInput = (props: Props) => { 
-  const { onChangeAmount, currentValue, currencies } = props;
+  const { userWallet, onChangeAmount, onCurrencyChange, currency, selectedCurrency, currentValue, autoFocus } = props;
   const classes = useStyles();
   return (
-    <Grid container justify="space-between" spacing={1} style={{ backgroundColor: '#cfe8fc', height: '100vh' }}>
+    <Grid container justify="space-between" spacing={1}>
       <Grid item>
         <CurrencySelect
-          currencies={currencies}
+          currencies={userWallet}
           classeNames={classes.textField}
+          onCurrencyChange={onCurrencyChange}
+          currency={currency}
         />
         <Grid classes={classes.marginTop10} item>
-          <Typography
-            variant="subtitle2"
-            color="textSecondary">
-            Available currency:
-          </Typography>
-          <Typography variant="subtitle1" color="textSecondary">
-            $233.24
-          </Typography>
+          <AvailableCurrency
+            symbol={selectedCurrency.symbol}
+            availableMoney={selectedCurrency.availableMoney}
+          />
         </Grid>
       </Grid>
       <Grid item>
         <AmountInput
           onChangeAmount={onChangeAmount}
           currentValue={currentValue}
-          classes={`${classes.textField} ${classes.width}`}
+          classes={`${classes.textField} ${classes.amountInput}`}
+          autoFocus={autoFocus}
         />
-        
       </Grid>
     </Grid> 
   )

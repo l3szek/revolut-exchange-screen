@@ -2,10 +2,9 @@
 import React from 'react';
 import { focusOnContentEnd, getFormattedValue } from '../utils/helpers';
 import { KEYCODES } from '../constants/common';
-import { makeStyles } from '@material-ui/core/styles';
-import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 
+import { formattedAmount } from '../utils/helpers';
 
 /**
  * Smart component which formats user input to look like a number (possibly with decimal part)
@@ -24,19 +23,25 @@ type Props = {
   pattern?: string,
   disabled?: boolean,
   maxLength?: string,
+  autoFocus?: boolean,
 }
 
 class AmountInput extends React.Component<Props> {
   constructor(props) {
     super(props);
     const initialValue = props.currentValue > 0 ? props.currentValue : '';
-    this.state = this.getStateWithFormattedValue(initialValue);
+    this.state = {
+      value: this.getStateWithFormattedValue(initialValue),
+      focused: false
+    };
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.currentValue !== this.props.currentValue) {
       // eslint-disable-next-line react/no-did-update-set-state
-      this.setState(this.getStateWithFormattedValue(this.props.currentValue));
+      this.setState({
+        value: this.getStateWithFormattedValue(this.props.currentValue)
+      });
     }
     if (this.props.focus) {
       focusOnContentEnd(this.input);
@@ -50,25 +55,31 @@ class AmountInput extends React.Component<Props> {
     }
   };
 
-  onChange(event) {
+  onChange = (event) => {
     const newState = this.getStateWithFormattedValue(event.target.value);
 
-    if (newState.val !== this.state.val) {
+    if (newState!== this.state.value) {
       // user allowed to type the point on the right side, but the
       // component does not count it when giving result number outside
-      const eventValue = newState.val.endsWith('.') ? newState.val.slice(0, -1) : newState.val;
+      const eventValue = newState.endsWith('.') ? newState.slice(0, -1) : newState;
 
-      event.target.value = eventValue !== '' ? new Number(eventValue) : eventValue;
+      event.target.value = eventValue !== '' ? Number(eventValue) : eventValue;
       this.props.onChangeAmount.call(this, event);
     }
 
-    this.setState(newState);
+    this.setState({
+      value: newState
+    });
   }
 
-  getStateWithFormattedValue(currentValue) {
-    return {
-      val: getFormattedValue(currentValue, this.formatNumber, this.props.maxWholePartLength, this.props.maxDecimalPartLength),
-    };
+  onFocus = () => {
+    this.setState({
+      focused: !this.state.focused
+    });
+  }
+
+  getStateWithFormattedValue = (currentValue) => {
+    return getFormattedValue(currentValue, this.formatNumber, this.props.maxWholePartLength, this.props.maxDecimalPartLength)
   }
 
   formatNumber = (value, digitsLimit = 10) => {
@@ -80,8 +91,10 @@ class AmountInput extends React.Component<Props> {
   input: ?HTMLDivElement;
 
   render() {
-    const { classes, disabled, id, maxLength, name, onFocus, pattern } = this.props;
-    const { val } = this.state;
+    const { classes, disabled, id, maxLength, name, pattern, autoFocus } = this.props;
+    const { value, focused } = this.state;
+    const amountFormatted = formattedAmount(value);
+
     const attributes = {
       autoCapitalize: 'off',
       autoComplete: 'off',
@@ -92,13 +105,14 @@ class AmountInput extends React.Component<Props> {
       maxLength,
       name,
       onKeyDown: this.onKeydown,
-      onChange: this.onChange.bind(this),
-      onFocus: onFocus ? onFocus.bind(this) : null,
+      onChange: this.onChange,
+      onFocus: this.onFocus,
+      onBlur: this.onFocus,
       pattern,
       ref: (e) => { this.input = e; },
       spellCheck: 'false',
       type: 'text',
-      value: val,
+      value: focused ? value : amountFormatted,
     };
 
     return (
@@ -106,8 +120,9 @@ class AmountInput extends React.Component<Props> {
         id="s-bssare"
         className={classes}
         margin="normal"
-        inputProps={{ 'aria-label': 'bare' }}
+        inputProps={{ 'aria-label': 'amount-input' }}
         {...attributes}
+        autoFocus={autoFocus}
       />
     )
   }

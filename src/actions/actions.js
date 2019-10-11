@@ -3,6 +3,7 @@ import { types } from './actionTypes';
 
 import type { AppState } from '../reducers/rootReducer';
 import type { Dispatch } from '../constants/common';
+import { formattedAmount } from '../utils/helpers';
 
 export const fetchUserWallet = () => (dispatch: Dispatch) => {
   dispatch({type: types.FETCHING_WALLET_START});
@@ -20,7 +21,7 @@ export const fetchUserWallet = () => (dispatch: Dispatch) => {
   });
 }
 
-export const getLatestRatessForCurrency = (currencyCode) => (dispatch: Dispatch) => {
+export const getLatestRatessForCurrency = (currencyCode: string) => (dispatch: Dispatch) => {
   dispatch({
     type: types.FETCHING_EXCHANGE_RATES_START,
     currency: currencyCode,
@@ -42,26 +43,108 @@ export const getLatestRatessForCurrency = (currencyCode) => (dispatch: Dispatch)
   })
 }
 
+export const calculateInput = (calculateAmountFrom?: boolean) =>
+  (dispatch: Dispatch, getState: () => AppState): void => { 
+    const state = getState();
+    const { calculator, currencies } = state;
+    const { currencyFrom, currencyTo, amountFrom, amountTo } = calculator;
+    const { rates } = currencies;
+    const currencyFromRates = rates.find(item => item.currency === currencyFrom).rates;
+    const currencyFromExchangeRate = currencyFromRates[currencyTo];
+    const amountToExchanged = amountFrom * currencyFromExchangeRate;
+    const amountFromExchanged = amountTo / currencyFromExchangeRate;
+    if (calculateAmountFrom) {
+      dispatch({
+        type: types.SELECT_AMOUNT_TO,
+        amount: amountToExchanged,
+      });
+    } else {
+      dispatch({
+        type: types.SELECT_AMOUNT_FROM,
+        amount: amountFromExchanged,
+      });
+    }
+  }
+
 export const getRatesForAllCurrencies = () =>
   (dispatch: Dispatch, getState: () => AppState): void => { 
     const state = getState();
-    const { userWallet } = state.wallet;
+    const { wallet, calculator } = state;
+    const { userWallet } = wallet;
+    const { amountFrom, amountTo } = calculator;
     userWallet.forEach(item =>
       dispatch(getLatestRatessForCurrency(item.currency))
     );
-  }
+    if (amountFrom > 0 || amountTo > 0) {
+      dispatch(calculateInput(true));
+    }
+  }  
 
-export const selectAmountFrom = (amount) =>
-  (dispatch: Dispatch, getState: () => AppState): void => {
+export const selectAmount = (amount: number, selectAmuntTo?: boolean) =>
+  (dispatch: Dispatch): void => {
+    const amountFormatted = formattedAmount(amount);
     if (amount === '' || amount === 0) {
-      // reset the amountTo as well
       dispatch({
-        type: types.SELECT_AMOUNT_TO,
+        type: selectAmuntTo ? types.SELECT_AMOUNT_FROM : types.SELECT_AMOUNT_TO,
         amount,
       });
     }
     dispatch({
-      type: types.SELECT_AMOUNT_FROM,
+      type: selectAmuntTo ? types.SELECT_AMOUNT_TO : types.SELECT_AMOUNT_FROM,
       amount: amount
     })
+
+    if (!selectAmuntTo) {
+      dispatch(calculateInput(true))
+    } else {
+      dispatch(calculateInput())
+    }
+  }
+
+export const onCurrencyChange = (currency: number, changeCurrencyTo?: boolean) =>
+  (dispatch: Dispatch, getState: () => AppState): void => { 
+    const state = getState();
+    const { currencyFrom, currencyTo } = state.calculator;
+    if (!changeCurrencyTo && currency === currencyTo) {
+      console.log('same currency')
+      dispatch({
+        type: types.SET_CURRENCY_TO,
+        currency: currencyFrom,
+      });
+    }
+    if (changeCurrencyTo && currency === currencyFrom) {
+      dispatch({
+        type: types.SET_CURRENCY_FROM,
+        currency: currencyTo,
+      });
+    }
+    dispatch({
+      type: changeCurrencyTo ? types.SET_CURRENCY_TO : types.SET_CURRENCY_FROM,
+      currency,
+    });
+    if (changeCurrencyTo) {
+      dispatch(calculateInput())
+    } else {
+      dispatch(calculateInput(true))
+    }
+  }
+
+export const switchCurrencies = () =>
+  (dispatch: Dispatch, getState: () => AppState): void => { 
+    const state = getState();
+    const { currencyFrom, currencyTo, amountFrom, amountTo } = state.calculator;
+    dispatch({
+      type: types.SET_CURRENCY_TO,
+      currency: currencyFrom,
+    });
+    dispatch({
+      type: types.SET_CURRENCY_FROM,
+      currency: currencyTo,
+    });
+    dispatch({
+      type: types.SELECT_AMOUNT_FROM,
+      amount: amountTo,
+    });
+
+    dispatch(calculateInput(true));
   }

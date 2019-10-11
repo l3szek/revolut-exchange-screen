@@ -38,17 +38,16 @@ export const getFormattedValue = (currentValue, formatNumber, maxWholePartLength
 
   let wholePart = formatNumber(parsedValue[0], maxWholePartLength);
 
-  // trim 0 on the start of the amount
-  if (wholePart === 0) {
-    wholePart = wholePart.replace(/^0+/, '0');
-  } else {
-    wholePart = wholePart.replace(/^0+/, '');
-  }
-
   if (parsedValue.length > 1) {
     decimalPart = formatNumber(parsedValue[1], maxDecimalPartLength);
   }
 
   const newValue = wholePart === '' ? '' : `${wholePart}.${decimalPart}`;
   return parsedValue.length === 1 ? wholePart : newValue;
+}
+
+export const formattedAmount = (amount: number) => {
+  const formatter = new Intl.NumberFormat('en-EN', {maximumFractionDigits: 4});
+  const formattedAmount = formatter.format(amount);
+  return formattedAmount
 }

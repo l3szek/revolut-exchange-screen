@@ -4,15 +4,15 @@ import { types } from '../actions/actionTypes';
 export type CalculatorState = {
   currencyFrom: string,
   currencyTo: string,
-  amountFrom: string,
-  amountTo: string,
+  amountFrom: number,
+  amountTo: number,
 };
 
 const initialState = {
   currencyFrom: '',
   currencyTo: '',
-  amountFrom: '',
-  amountTo: '',
+  amountFrom: 0,
+  amountTo: 0,
 };
 
 export default (state: CalculatorState = { ...initialState }, action: Object) => {
@@ -24,16 +24,16 @@ export default (state: CalculatorState = { ...initialState }, action: Object) =>
     };
 
     case types.SET_CURRENCY_FROM:
-      return { ...state, calculator: {currencyFrom: action.currency} };   
+      return { ...state, currencyFrom: action.currency };   
     
     case types.SET_CURRENCY_TO:
-      return { ...state, calculator: {currencyTo: action.currency} };  
+      return { ...state, currencyTo: action.currency };  
       
     case types.SELECT_AMOUNT_FROM:
-      return { ...state, calculator: {amountFrom: action.amount} };   
+      return { ...state, amountFrom: action.amount };   
     
     case types.SELECT_AMOUNT_TO:
-      return { ...state, calculator: {amountTo: action.amount} };
+      return { ...state, amountTo: action.amount };
       
     default:
       return state;
