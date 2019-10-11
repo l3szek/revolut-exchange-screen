@@ -50,3 +50,18 @@ export const getRatesForAllCurrencies = () =>
       dispatch(getLatestRatessForCurrency(item.currency))
     );
   }
+
+export const selectAmountFrom = (amount) =>
+  (dispatch: Dispatch, getState: () => AppState): void => {
+    if (amount === '' || amount === 0) {
+      // reset the amountTo as well
+      dispatch({
+        type: types.SELECT_AMOUNT_TO,
+        amount,
+      });
+    }
+    dispatch({
+      type: types.SELECT_AMOUNT_FROM,
+      amount: amount
+    })
+  }
