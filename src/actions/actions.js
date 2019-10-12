@@ -162,12 +162,21 @@ export const exchangeMoney = () =>
     const { currencyFrom, currencyTo, amountFrom, amountTo } = calculator;
     const currencyFromWallet = wallet.userWallet.find(item => item.currency === currencyFrom).availableMoney;
     const currencyToWallet = wallet.userWallet.find(item => item.currency === currencyTo).availableMoney;
-    const newCurrencyFromWalletVal = currencyFromWallet - amountFrom;
-    const newCurrencyToWalletVal = currencyToWallet + amountTo;
+    const newCurrencyFromWalletVal = currencyFromWallet - Number(amountFrom);
+    const newCurrencyToWalletVal = currencyToWallet + Number(amountTo);
 
     if (amountFrom > currencyFromWallet) {
       return null;
     }
     dispatch(updateWallet(currencyFrom, newCurrencyFromWalletVal));
     dispatch(updateWallet(currencyTo, newCurrencyToWalletVal));
+    return Promise.resolve();
+  }
+
+export const toggleConfirmationModal = (showModal: boolean) =>
+  (dispatch: Dispatch): void => { 
+    dispatch({
+      type: types.TOGGLE_CONFIRMATION_MODAL,
+      showModal,
+    });
   }

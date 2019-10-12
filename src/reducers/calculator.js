@@ -11,8 +11,8 @@ export type CalculatorState = {
 const initialState = {
   currencyFrom: '',
   currencyTo: '',
-  amountFrom: 0,
-  amountTo: 0,
+  amountFrom: '',
+  amountTo: '',
 };
 
 export default (state: CalculatorState = { ...initialState }, action: Object) => {

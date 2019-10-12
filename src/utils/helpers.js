@@ -17,7 +17,7 @@ export const focusOnContentEnd = (input: HTMLInputElement) => {
   }
 };
 
-export const formatNumber = (value, digitsLimit = 10) => {
+export const formatNumber = (value: number, digitsLimit: number = 10) => {
   const val = String(value);
   const parsedValue = val.replace(/[^\d]+/i, '');
   return parsedValue.slice(0, digitsLimit);
@@ -26,7 +26,7 @@ export const formatNumber = (value, digitsLimit = 10) => {
 /**
  * Format the input value
  */
-export const getFormattedValue = (currentValue) => {
+export const getFormattedValue = (currentValue: number) => {
 
   const maxWholePartLength = 10;
   const maxDecimalPartLength = 2;
@@ -39,7 +39,10 @@ export const getFormattedValue = (currentValue) => {
 
   currentVal = currentVal.replace('..', '.');
 
-  if (currentVal.startsWith('.')) {
+  if (currentVal === '00') {
+    currentVal = '0';
+  }
+  if ((currentVal.length > 1 && currentVal.startsWith('0') && currentVal.charAt(1) !== '.') || currentVal.startsWith('.')) {
     currentVal = currentVal.substr(1);
   }
 
@@ -59,4 +62,15 @@ export const formattedAmount = (amount: number, maxFractionDigfits?: number) => 
   const formatter = new Intl.NumberFormat('en-EN', {maximumFractionDigits: maxFractionDigfits || 4});
   const formattedAmount = formatter.format(amount);
   return formattedAmount
+}
+
+export const checkAmountFields = (amount: string | number) => {
+  const amountTypeEnd = typeof amount === 'string' ? amount.endsWith('.') : false;
+  const checkAmount = amount === 0
+    || amount.length === 0
+    || amount === '0'
+    || amount === '0.00'
+    || amount === '0.0'
+    || amountTypeEnd;
+  return checkAmount;
 }

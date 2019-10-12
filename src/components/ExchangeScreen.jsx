@@ -6,12 +6,14 @@ import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
-import { onCurrencyChange, selectAmount, switchCurrencies, exchangeMoney } from '../actions/actions';
+import { onCurrencyChange, selectAmount, switchCurrencies, exchangeMoney, toggleConfirmationModal } from '../actions/actions';
 import { theme as mainTheme } from '../utils/theme';
+import { checkAmountFields } from '../utils/helpers';
 import CalculatorInput from './CalculatorInput';
 import SwitchCurrenciesButton from './SwitchCurrenciesButton';
 import ExchangeRateInfo from './ExchangeRateInfo';
 import ExchangeButton from './ExchangeButton';
+import ExchangeConfirmationModal from './ExchangeConfirmationModal';
 
 import type { AppState } from './reducers/rootReducer';
 import type { Dispatch } from './constants/common';
@@ -20,7 +22,7 @@ type Props = {
   userWallet: Array<any>,
   classeNames: string,
   onCurrencyChange: SyntheticInputEvent<*> => any,
-  onChangeAmount: SyntheticInputEvent<*> => any,
+  onChangeAmount: Function,
   selectedCurrencyFrom: Object,
   selectedCurrencyTo: Object,
   amountFrom: number | string,
@@ -32,6 +34,8 @@ type Props = {
   disabledExchangeBtn: boolean,
   onExchangeBtnClick: Function,
   notEnoughFunds: boolean,
+  closeConfirmationModal: Function,
+  confirmationModalActive: boolean,
 }
 
 const useStyles = makeStyles(theme => ({
@@ -51,7 +55,7 @@ const useStyles = makeStyles(theme => ({
 const ExchangeScreen = (props: Props) => { 
   const { userWallet, onChangeAmount, amountFrom, onCurrencyChange, currencyFrom,
     selectedCurrencyFrom, selectedCurrencyTo, currencyTo, amountTo, onCurrencySwitch,
-    rate, disabledExchangeBtn, onExchangeBtnClick, notEnoughFunds } = props;
+    rate, disabledExchangeBtn, onExchangeBtnClick, notEnoughFunds, confirmationModalActive, closeConfirmationModal } = props;
   const classes = useStyles();
 
   return (
@@ -83,20 +87,25 @@ const ExchangeScreen = (props: Props) => {
           currency={currencyTo}
           selectedCurrency={selectedCurrencyTo}
         />
-
         <ExchangeButton
           disabled={disabledExchangeBtn}
           onClick={onExchangeBtnClick}
         />
-        
       </Grid>
-
+      <ExchangeConfirmationModal
+        open={confirmationModalActive}
+        handleClose={closeConfirmationModal}
+        amountFrom={amountFrom}
+        currencyFrom={selectedCurrencyFrom.symbol}
+        amountTo={amountTo}
+        currencyTo={selectedCurrencyTo.symbol}
+      />
     </Fragment> 
   )
 }
 
 const mapStateToProps = (state: AppState): $Shape<Props> => {
-  const { calculator, wallet, currencies } = state;
+  const { calculator, wallet, currencies, modals } = state;
   const { userWallet } = wallet;
   const { rates } = currencies;
   const { currencyFrom, amountFrom, currencyTo, amountTo } = calculator;
@@ -106,9 +115,11 @@ const mapStateToProps = (state: AppState): $Shape<Props> => {
   const selectedCurrencyTo = selectedCurrency(currencyTo);
   const ratesObj = rates.find(item => item.currency === currencyFrom);
   const rate = ratesObj && ratesObj.rates ? ratesObj.rates[currencyTo] : null;
-  const checkAmount = amountFrom === 0 || amountFrom.length === 0 || amountFrom === '0' || amountFrom === '0.00' || amountFrom === '0.0';
+  const checkAmountFrom = checkAmountFields(amountFrom);
+  const checkAmountTo = checkAmountFields(amountTo);
   const notEnoughFunds = amountFrom > selectedCurrencyFrom.availableMoney;
-  const disabledExchangeBtn = notEnoughFunds || checkAmount;
+  const disabledExchangeBtn = notEnoughFunds || checkAmountFrom || checkAmountTo;
+  const { confirmationModalActive } = modals;
   
   return {
     userWallet,
@@ -121,6 +132,7 @@ const mapStateToProps = (state: AppState): $Shape<Props> => {
     rate,
     disabledExchangeBtn,
     notEnoughFunds,
+    confirmationModalActive,
   }
 };
 
@@ -128,15 +140,19 @@ const mapDispatchToProps = (dispatch: Dispatch): $Shape<Props> => ({
   onCurrencyChange: (e: SyntheticInputEvent<HTMLInputElement>, changeCurrencyTo?: boolean) => {
     dispatch(onCurrencyChange(e.target.value, changeCurrencyTo));
   },
-  onChangeAmount: (e: SyntheticInputEvent<HTMLInputElement>, selectAmountTo?: boolean) => {
-    dispatch(selectAmount(e.target.value, selectAmountTo));
+  onChangeAmount: (val: number, selectAmountTo?: boolean) => {
+    dispatch(selectAmount(val, selectAmountTo));
   },
   onCurrencySwitch: () => {
     dispatch(switchCurrencies());
   },
   onExchangeBtnClick: () => { 
-    dispatch(exchangeMoney());
+    dispatch(exchangeMoney())
+      .then(() =>dispatch(toggleConfirmationModal(true)));
   },
+  closeConfirmationModal: () => {
+    dispatch(toggleConfirmationModal(false));
+  }
 });
 
 export default connect(
