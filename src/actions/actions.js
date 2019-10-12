@@ -3,7 +3,6 @@ import { types } from './actionTypes';
 
 import type { AppState } from '../reducers/rootReducer';
 import type { Dispatch } from '../constants/common';
-import { formattedAmount } from '../utils/helpers';
 
 export const fetchUserWallet = () => (dispatch: Dispatch) => {
   dispatch({type: types.FETCHING_WALLET_START});
@@ -82,7 +81,6 @@ export const getRatesForAllCurrencies = () =>
 
 export const selectAmount = (amount: number, selectAmuntTo?: boolean) =>
   (dispatch: Dispatch): void => {
-    const amountFormatted = formattedAmount(amount);
     if (amount === '' || amount === 0) {
       dispatch({
         type: selectAmuntTo ? types.SELECT_AMOUNT_FROM : types.SELECT_AMOUNT_TO,
@@ -106,7 +104,6 @@ export const onCurrencyChange = (currency: number, changeCurrencyTo?: boolean) =
     const state = getState();
     const { currencyFrom, currencyTo } = state.calculator;
     if (!changeCurrencyTo && currency === currencyTo) {
-      console.log('same currency')
       dispatch({
         type: types.SET_CURRENCY_TO,
         currency: currencyFrom,
@@ -132,7 +129,7 @@ export const onCurrencyChange = (currency: number, changeCurrencyTo?: boolean) =
 export const switchCurrencies = () =>
   (dispatch: Dispatch, getState: () => AppState): void => { 
     const state = getState();
-    const { currencyFrom, currencyTo, amountFrom, amountTo } = state.calculator;
+    const { currencyFrom, currencyTo, amountTo } = state.calculator;
     dispatch({
       type: types.SET_CURRENCY_TO,
       currency: currencyFrom,
@@ -147,4 +144,30 @@ export const switchCurrencies = () =>
     });
 
     dispatch(calculateInput(true));
+  }
+
+export const updateWallet = (currency: string, amount: string | number) =>
+  (dispatch: Dispatch): void => { 
+    dispatch({
+      type: types.UPDATE_WALLET,
+      currency,
+      amount,
+    });
+  }
+
+export const exchangeMoney = () =>
+  (dispatch: Dispatch, getState: () => AppState): void => { 
+    const state = getState();
+    const { wallet, calculator } = state;
+    const { currencyFrom, currencyTo, amountFrom, amountTo } = calculator;
+    const currencyFromWallet = wallet.userWallet.find(item => item.currency === currencyFrom).availableMoney;
+    const currencyToWallet = wallet.userWallet.find(item => item.currency === currencyTo).availableMoney;
+    const newCurrencyFromWalletVal = currencyFromWallet - amountFrom;
+    const newCurrencyToWalletVal = currencyToWallet + amountTo;
+
+    if (amountFrom > currencyFromWallet) {
+      return null;
+    }
+    dispatch(updateWallet(currencyFrom, newCurrencyFromWalletVal));
+    dispatch(updateWallet(currencyTo, newCurrencyToWalletVal));
   }

@@ -8,24 +8,20 @@ import { formattedAmount } from '../utils/helpers';
 type Props = {
   symbol: string,
   availableMoney: number,
+  notEnoughFunds?: boolean,
 }
 
 const AvailableCurrency = (props: Props) => { 
-  const { symbol, availableMoney } = props;
-  const amount = formattedAmount(availableMoney);
+  const { symbol, availableMoney, notEnoughFunds } = props;
+  const amount = formattedAmount(availableMoney, 2);
+  const typeClass = notEnoughFunds ? 'secondary' : 'textSecondary';
   return (
     <Fragment>
       <Typography
         variant="subtitle2"
-        color="textSecondary"
+        color={typeClass}
       >
-        Balance:
-      </Typography>
-      <Typography
-        variant="subtitle1"
-        color="textSecondary"
-      >
-        {symbol} {amount}
+        Balance: {symbol} {amount}
       </Typography>
     </Fragment>
   )

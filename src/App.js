@@ -10,7 +10,7 @@ import Container from '@material-ui/core/Container';
 import { useInterval } from './utils/useInterval';
 import { fetchUserWallet, getRatesForAllCurrencies } from './actions/actions';
 
-import CalculatorScreen from './components/CalculatorScreen';
+import ExchangeScreen from './components/ExchangeScreen';
 
 import type { Dispatch } from './constants/common';
 
@@ -21,13 +21,13 @@ type Props = {
 
 const useStyles = makeStyles(theme => ({
   title: {
-    padding: 20,
+    padding: '20px 20px 0 20px',
   },
   container: {
     marginTop: 20,
     marginBottom: 20,
     background: '#FFFFFF',
-    borderRadius: 4,
+    borderRadius: theme.shape,
     paddingLeft: 0,
     paddingRight: 0,
   },
@@ -52,7 +52,7 @@ const App = (props: Props) => {
         <Grid>
           <Typography className={classes.title} variant="h5">Exchange</Typography>
         </Grid>
-        <CalculatorScreen />
+        <ExchangeScreen />
       </Container>
     </Fragment>
   );

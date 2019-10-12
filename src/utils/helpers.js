@@ -17,10 +17,19 @@ export const focusOnContentEnd = (input: HTMLInputElement) => {
   }
 };
 
+export const formatNumber = (value, digitsLimit = 10) => {
+  const val = String(value);
+  const parsedValue = val.replace(/[^\d]+/i, '');
+  return parsedValue.slice(0, digitsLimit);
+}
+
 /**
  * Format the input value
  */
-export const getFormattedValue = (currentValue, formatNumber, maxWholePartLength, maxDecimalPartLength) => {
+export const getFormattedValue = (currentValue) => {
+
+  const maxWholePartLength = 10;
+  const maxDecimalPartLength = 2;
   let currentVal = String(currentValue);
   if (currentVal === '') {
     return currentVal;
@@ -46,8 +55,8 @@ export const getFormattedValue = (currentValue, formatNumber, maxWholePartLength
   return parsedValue.length === 1 ? wholePart : newValue;
 }
 
-export const formattedAmount = (amount: number) => {
-  const formatter = new Intl.NumberFormat('en-EN', {maximumFractionDigits: 4});
+export const formattedAmount = (amount: number, maxFractionDigfits?: number) => {
+  const formatter = new Intl.NumberFormat('en-EN', {maximumFractionDigits: maxFractionDigfits || 4});
   const formattedAmount = formatter.format(amount);
   return formattedAmount
 }

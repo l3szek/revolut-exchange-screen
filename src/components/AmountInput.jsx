@@ -6,9 +6,6 @@ import TextField from '@material-ui/core/TextField';
 
 import { formattedAmount } from '../utils/helpers';
 
-/**
- * Smart component which formats user input to look like a number (possibly with decimal part)
- */
 
 type Props = {
   onChangeAmount: Function,
@@ -48,6 +45,18 @@ class AmountInput extends React.Component<Props> {
     }
   }
 
+  /*
+  static getDerivedStateFromProps(props, state) {
+    if (props.currentValue !== state.value) {
+      return {
+        value: getFormattedValue(props.currentValue, 10, 20)
+      };
+    }
+    return null;
+  }
+
+  */
+
   onKeydown = (event) => {
     const target = event.currentTarget;
     if (event.keyCode === KEYCODES.ENTER) {
@@ -63,8 +72,8 @@ class AmountInput extends React.Component<Props> {
       // component does not count it when giving result number outside
       const eventValue = newState.endsWith('.') ? newState.slice(0, -1) : newState;
 
-      event.target.value = eventValue !== '' ? Number(eventValue) : eventValue;
-      this.props.onChangeAmount.call(this, event);
+      event.target.value = eventValue;
+      this.props.onChangeAmount(event);
     }
 
     this.setState({
@@ -78,15 +87,8 @@ class AmountInput extends React.Component<Props> {
     });
   }
 
-  getStateWithFormattedValue = (currentValue) => {
-    return getFormattedValue(currentValue, this.formatNumber, this.props.maxWholePartLength, this.props.maxDecimalPartLength)
-  }
-
-  formatNumber = (value, digitsLimit = 10) => {
-    const val = String(value);
-    const parsedValue = val.replace(/[^\d]+/i, '');
-    return parsedValue.slice(0, digitsLimit);
-  }
+  getStateWithFormattedValue = (currentValue) => getFormattedValue(currentValue)
+  
 
   input: ?HTMLDivElement;
 
@@ -132,8 +134,6 @@ AmountInput.defaultProps = {
   currentValue: '',
   onFocus: null,
   focus: false,
-  maxWholePartLength: 10,
-  maxDecimalPartLength: 2,
   name: '',
   id: '',
   classes: '',

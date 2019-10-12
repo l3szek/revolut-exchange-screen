@@ -5,13 +5,13 @@ import { connect } from 'react-redux';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Icon from '@material-ui/core/Icon';
 
-import { onCurrencyChange, selectAmount, switchCurrencies } from '../actions/actions';
+import { onCurrencyChange, selectAmount, switchCurrencies, exchangeMoney } from '../actions/actions';
 import { theme as mainTheme } from '../utils/theme';
 import CalculatorInput from './CalculatorInput';
 import SwitchCurrenciesButton from './SwitchCurrenciesButton';
 import ExchangeRateInfo from './ExchangeRateInfo';
+import ExchangeButton from './ExchangeButton';
 
 import type { AppState } from './reducers/rootReducer';
 import type { Dispatch } from './constants/common';
@@ -23,30 +23,35 @@ type Props = {
   onChangeAmount: SyntheticInputEvent<*> => any,
   selectedCurrencyFrom: Object,
   selectedCurrencyTo: Object,
-  amountFrom: number,
-  amountTo: number,
+  amountFrom: number | string,
+  amountTo: number | string,
   currencyFrom: string,
   currencyTo: string,
   onCurrencySwitch: Function,
   rate: number | null,
+  disabledExchangeBtn: boolean,
+  onExchangeBtnClick: Function,
+  notEnoughFunds: boolean,
 }
 
 const useStyles = makeStyles(theme => ({
   firstInput: {
     position: 'relative',
+    paddingTop: 0,
   },
   secondInput: {
     background: mainTheme.colors.grey,
   },
   padding: {
-    padding: 20,
-    paddingBottom: 40,
+    padding: theme.spacing(2.5),
+    paddingBottom: theme.spacing(5),
   }
 }));
 
-const CalculatorScreen = (props: Props) => { 
+const ExchangeScreen = (props: Props) => { 
   const { userWallet, onChangeAmount, amountFrom, onCurrencyChange, currencyFrom,
-    selectedCurrencyFrom, selectedCurrencyTo, currencyTo, amountTo, onCurrencySwitch, rate } = props;
+    selectedCurrencyFrom, selectedCurrencyTo, currencyTo, amountTo, onCurrencySwitch,
+    rate, disabledExchangeBtn, onExchangeBtnClick, notEnoughFunds } = props;
   const classes = useStyles();
 
   return (
@@ -59,6 +64,7 @@ const CalculatorScreen = (props: Props) => {
           currentValue={amountFrom}
           currency={currencyFrom}
           selectedCurrency={selectedCurrencyFrom}
+          notEnoughFunds={notEnoughFunds}
           autoFocus
         />
         <SwitchCurrenciesButton onCurrencySwitch={onCurrencySwitch} />
@@ -77,6 +83,12 @@ const CalculatorScreen = (props: Props) => {
           currency={currencyTo}
           selectedCurrency={selectedCurrencyTo}
         />
+
+        <ExchangeButton
+          disabled={disabledExchangeBtn}
+          onClick={onExchangeBtnClick}
+        />
+        
       </Grid>
 
     </Fragment> 
@@ -94,6 +106,10 @@ const mapStateToProps = (state: AppState): $Shape<Props> => {
   const selectedCurrencyTo = selectedCurrency(currencyTo);
   const ratesObj = rates.find(item => item.currency === currencyFrom);
   const rate = ratesObj && ratesObj.rates ? ratesObj.rates[currencyTo] : null;
+  const checkAmount = amountFrom === 0 || amountFrom.length === 0 || amountFrom === '0' || amountFrom === '0.00' || amountFrom === '0.0';
+  const notEnoughFunds = amountFrom > selectedCurrencyFrom.availableMoney;
+  const disabledExchangeBtn = notEnoughFunds || checkAmount;
+  
   return {
     userWallet,
     currencyFrom,
@@ -103,6 +119,8 @@ const mapStateToProps = (state: AppState): $Shape<Props> => {
     selectedCurrencyFrom,
     selectedCurrencyTo,
     rate,
+    disabledExchangeBtn,
+    notEnoughFunds,
   }
 };
 
@@ -114,11 +132,14 @@ const mapDispatchToProps = (dispatch: Dispatch): $Shape<Props> => ({
     dispatch(selectAmount(e.target.value, selectAmountTo));
   },
   onCurrencySwitch: () => {
-    dispatch(switchCurrencies())
-  }
+    dispatch(switchCurrencies());
+  },
+  onExchangeBtnClick: () => { 
+    dispatch(exchangeMoney());
+  },
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(CalculatorScreen);
+)(ExchangeScreen);

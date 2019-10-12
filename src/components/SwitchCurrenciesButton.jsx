@@ -15,15 +15,15 @@ const useStyles = makeStyles(theme => ({
     display: 'block',
     border: `2px solid ${mainTheme.colors.grey}`,
     borderRadius: '50%',
-    height: 40,
-    width: 40,
-    paddingLeft: 6,
-    paddingTop: 6,
+    height: theme.spacing(5),
+    width: theme.spacing(5),
+    paddingLeft: theme.spacing(0.75),
+    paddingTop: theme.spacing(0.75),
     zIndex: 100,
     cursor: 'pointer',
     position: 'absolute',
-    bottom: -20,
-    background: mainTheme.colors.white
+    bottom: -theme.spacing(2.5),
+    background: theme.palette.common.white
   },
 }));
 
@@ -31,16 +31,14 @@ const SwitchCurrenciesButton = (props: Props) => {
   const { onCurrencySwitch } = props;
   const classes = useStyles();
   return (
-    <a
-      type="button"
-      tabIndex={0}
+    <button
       onClick={onCurrencySwitch}
       className={classes.switchBtn}
     >
       <Icon color="primary">
         import_export
       </Icon>
-    </a>
+    </button>
   )
 }
 

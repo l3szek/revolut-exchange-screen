@@ -20,6 +20,17 @@ export default (state: WalletState = { ...initialState }, action: Object) => {
       const { defaultCurrency, userWallet, userDefaultCurrency } = action.userDetails;
       return { ...state, userDefaultCurrency, defaultCurrency, userWallet }
     };
+    
+    case types.UPDATE_WALLET: {
+      const { currency, amount } = action;
+      const updatedWallet = state.userWallet.map(item => {
+        if (item.currency === currency) {
+          item.availableMoney = amount
+        }
+        return item;
+      });
+      return { ...state, userWallet: updatedWallet }
+    }
       
     default:
       return state;

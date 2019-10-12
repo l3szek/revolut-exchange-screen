@@ -17,11 +17,12 @@ type Props = {
   currentValue: string | number,
   selectedCurrency: Object,
   autoFocus?: boolean,
+  notEnoughFunds?: boolean,
 }
 
 const useStyles = makeStyles(theme => ({
   marginTop20: {
-    marginTop: 20,
+    marginTop: theme.spacing(2.5),
   },
   root: {
     flexGrow: 1,
@@ -35,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   },
   textField: {
     '& .MuiInput-formControl': {
-      fontSize: 40,
+      fontSize: theme.spacing(5),
     }
   },
   amountInput: {
@@ -47,7 +48,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const CalculatorInput = (props: Props) => { 
-  const { userWallet, onChangeAmount, onCurrencyChange, currency, selectedCurrency, currentValue, autoFocus } = props;
+  const { userWallet, onChangeAmount, onCurrencyChange, currency, selectedCurrency, currentValue, autoFocus, notEnoughFunds } = props;
   const classes = useStyles();
   return (
     <Grid container justify="space-between" spacing={1}>
@@ -62,6 +63,7 @@ const CalculatorInput = (props: Props) => {
           <AvailableCurrency
             symbol={selectedCurrency.symbol}
             availableMoney={selectedCurrency.availableMoney}
+            notEnoughFunds={notEnoughFunds}
           />
         </Grid>
       </Grid>

@@ -11,7 +11,7 @@ import { theme as mainTheme } from '../utils/theme';
 
 type Props = {
   symbol: string,
-  rate: number,
+  rate: number| null,
   currencyTo: string,
 }
 
@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
     bottom: -20,
     left: '50%',
     marginLeft: -82,
-    background: mainTheme.colors.white
+    background: theme.palette.common.white
   },
 }));
 
