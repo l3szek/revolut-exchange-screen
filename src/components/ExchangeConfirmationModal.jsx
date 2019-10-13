@@ -30,7 +30,7 @@ const ExchangeConfirmationModal = (props: Props) => {
       <DialogTitle color="primary" id="alert-dialog-title">{"Exchange successful"}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          You have successfully exchanged {currencyFrom}<strong>{formattedAmountFrom}</strong> to {currencyTo}<strong>{formattedAmountTo}</strong>
+          You have successfully exchanged {currencyFrom} <strong>{formattedAmountFrom}</strong> to {currencyTo} <strong>{formattedAmountTo}</strong>
         </DialogContentText>
       </DialogContent>
       <DialogActions>

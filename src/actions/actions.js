@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { types } from './actionTypes';
 
+import { exchangeRatesApi, userWalletApiMock } from '../constants/common';
+
 import type { AppState } from '../reducers/rootReducer';
 import type { Dispatch } from '../constants/common';
 
@@ -8,9 +10,9 @@ export const fetchUserWallet = () => (dispatch: Dispatch) => {
   dispatch({type: types.FETCHING_WALLET_START});
   // in real-life scenario, the below would make an API call to fetch the user's wallet
   // for the purpose of this app, I have created a mock of user wallet in a JSON file
-  return axios.get('/utils/userWalletMock.json')
+  return axios.get(userWalletApiMock)
   .then(function (response) {
-    dispatch({
+    return dispatch({
       type: types.FETCHING_WALLET_SUCCESS,
       userDetails: response.data
     });
@@ -25,7 +27,7 @@ export const getLatestRatessForCurrency = (currencyCode: string) => (dispatch: D
     type: types.FETCHING_EXCHANGE_RATES_START,
     currency: currencyCode,
   });
-  return axios.get('https://api.exchangeratesapi.io/latest', {
+  return axios.get(`${exchangeRatesApi}/latest`, {
     params: {
       base: currencyCode
     }
@@ -63,6 +65,7 @@ export const calculateInput = (calculateAmountFrom?: boolean) =>
         amount: amountFromExchanged,
       });
     }
+    return Promise.resolve();
   }
 
 export const getRatesForAllCurrencies = () =>
@@ -71,12 +74,16 @@ export const getRatesForAllCurrencies = () =>
     const { wallet, calculator } = state;
     const { userWallet } = wallet;
     const { amountFrom, amountTo } = calculator;
-    userWallet.forEach(item =>
-      dispatch(getLatestRatessForCurrency(item.currency))
-    );
-    if (amountFrom > 0 || amountTo > 0) {
-      dispatch(calculateInput(true));
-    }
+    const allCurrenciesCalls = [];
+    userWallet.forEach(item => allCurrenciesCalls.push(dispatch(getLatestRatessForCurrency(item.currency))));
+    return Promise
+    .all(allCurrenciesCalls)
+      .then(() => {
+        if (amountFrom > 0 || amountTo > 0) {
+          dispatch(calculateInput(true));
+        }
+        Promise.resolve();
+    });
   }  
 
 export const selectAmount = (amount: number, selectAmuntTo?: boolean) =>
@@ -89,7 +96,7 @@ export const selectAmount = (amount: number, selectAmuntTo?: boolean) =>
     }
     dispatch({
       type: selectAmuntTo ? types.SELECT_AMOUNT_TO : types.SELECT_AMOUNT_FROM,
-      amount: amount
+      amount,
     })
 
     if (!selectAmuntTo) {
@@ -97,6 +104,8 @@ export const selectAmount = (amount: number, selectAmuntTo?: boolean) =>
     } else {
       dispatch(calculateInput())
     }
+
+    return Promise.resolve();
   }
 
 export const onCurrencyChange = (currency: number, changeCurrencyTo?: boolean) =>
@@ -144,15 +153,21 @@ export const switchCurrencies = () =>
     });
 
     dispatch(calculateInput(true));
+
+    return Promise.resolve();
   }
 
 export const updateWallet = (currency: string, amount: string | number) =>
-  (dispatch: Dispatch): void => { 
+  (dispatch: Dispatch, getState: () => AppState): void => { 
+    const state = getState();
+    const { userWallet } = state.wallet;
     dispatch({
       type: types.UPDATE_WALLET,
       currency,
       amount,
+      userWallet,
     });
+    return Promise.resolve();
   }
 
 export const exchangeMoney = () =>

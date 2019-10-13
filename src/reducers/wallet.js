@@ -22,8 +22,8 @@ export default (state: WalletState = { ...initialState }, action: Object) => {
     };
     
     case types.UPDATE_WALLET: {
-      const { currency, amount } = action;
-      const updatedWallet = state.userWallet.map(item => {
+      const { currency, amount, userWallet } = action;
+      const updatedWallet = userWallet.map(item => {
         if (item.currency === currency) {
           item.availableMoney = amount
         }
