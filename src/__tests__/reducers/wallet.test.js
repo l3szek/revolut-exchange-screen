@@ -56,6 +56,4 @@ describe('wallet reducer', () => {
       })
   })
 
-  
-
 })

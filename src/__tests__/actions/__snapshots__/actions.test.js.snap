@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Revolut Exchange screen App tests should fetch latest rates for currencies in user wallet: state diff 1`] = `
+exports[`Revolut Exchange screen App actions tests should fetch latest rates for currencies in user wallet: state diff 1`] = `
 Object {
   "calculator": Object {
     "currencyFrom": "GBP",
@@ -190,7 +190,7 @@ Object {
 }
 `;
 
-exports[`Revolut Exchange screen App tests should fetch user wallet: fecthing wallet complete 1`] = `
+exports[`Revolut Exchange screen App actions tests should fetch user wallet: fecthing wallet complete 1`] = `
 Object {
   "calculator": Object {
     "currencyFrom": "GBP",
@@ -241,9 +241,9 @@ Object {
 }
 `;
 
-exports[`Revolut Exchange screen App tests should fetch user wallet: started fetching wallet 1`] = `Object {}`;
+exports[`Revolut Exchange screen App actions tests should fetch user wallet: started fetching wallet 1`] = `Object {}`;
 
-exports[`Revolut Exchange screen App tests should fetch user wallet: state diff 1`] = `
+exports[`Revolut Exchange screen App actions tests should fetch user wallet: state diff 1`] = `
 Object {
   "calculator": Object {
     "currencyFrom": "GBP",
@@ -294,7 +294,7 @@ Object {
 }
 `;
 
-exports[`Revolut Exchange screen App tests should get latest rates for selected currency: fecthing rates complete 1`] = `
+exports[`Revolut Exchange screen App actions tests should get latest rates for selected currency: fecthing rates complete 1`] = `
 Object {
   "currencies": Object {
     "fetchingExchangeRates": false,
@@ -302,7 +302,7 @@ Object {
 }
 `;
 
-exports[`Revolut Exchange screen App tests should get latest rates for selected currency: started fetching rates 1`] = `
+exports[`Revolut Exchange screen App actions tests should get latest rates for selected currency: started fetching rates 1`] = `
 Object {
   "currencies": Object {
     "fetchingExchangeRates": true,
@@ -310,4 +310,4 @@ Object {
 }
 `;
 
-exports[`Revolut Exchange screen App tests should get latest rates for selected currency: state diff 1`] = `Object {}`;
+exports[`Revolut Exchange screen App actions tests should get latest rates for selected currency: state diff 1`] = `Object {}`;

@@ -1,0 +1,251 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Create components snapshots 1`] = `
+<div
+  autoCapitalize="off"
+  autoCorrect="off"
+  className="MuiFormControl-root MuiTextField-root MuiFormControl-marginNormal"
+  onKeyDown={[Function]}
+  pattern="[0-9.]*"
+  spellCheck="false"
+>
+  <div
+    className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+    onClick={[Function]}
+  >
+    <input
+      aria-invalid={false}
+      aria-label="amount-input"
+      autoComplete="off"
+      className="MuiInputBase-input MuiInput-input"
+      disabled={false}
+      id="s-bssare"
+      onAnimationStart={[Function]}
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      required={false}
+      type="text"
+      value="1,234.5"
+    />
+  </div>
+</div>
+`;
+
+exports[`Create components snapshots 2`] = `
+<h6
+  className="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextSecondary"
+>
+  Balance: 
+  $
+   
+  1,234.5
+</h6>
+`;
+
+exports[`Create components snapshots 3`] = `
+<div
+  className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 MuiGrid-justify-xs-space-between"
+>
+  <div
+    className="MuiGrid-root MuiGrid-item"
+  >
+    <div
+      className="MuiFormControl-root MuiTextField-root makeStyles-textField-72 makeStyles-menu-177 MuiFormControl-marginNormal"
+    >
+      <div
+        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+        onClick={[Function]}
+      >
+        <div
+          aria-haspopup="listbox"
+          className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input MuiInputBase-inputSelect"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          role="button"
+          tabIndex={0}
+        >
+          USD
+        </div>
+        <input
+          id="standard-select-currency"
+          onAnimationStart={[Function]}
+          type="hidden"
+          value="USD"
+        />
+        <svg
+          aria-hidden="true"
+          className="MuiSvgIcon-root MuiSelect-icon"
+          focusable="false"
+          role="presentation"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M7 10l5 5 5-5z"
+          />
+        </svg>
+      </div>
+    </div>
+    <div
+      className="MuiGrid-root MuiGrid-item"
+    >
+      <h6
+        className="MuiTypography-root MuiTypography-subtitle2 MuiTypography-colorTextSecondary"
+      >
+        Balance: 
+        $
+         
+        1,000
+      </h6>
+    </div>
+  </div>
+  <div
+    className="MuiGrid-root MuiGrid-item"
+  >
+    <div
+      autoCapitalize="off"
+      autoCorrect="off"
+      className="MuiFormControl-root MuiTextField-root makeStyles-textField-72 makeStyles-amountInput-73 MuiFormControl-marginNormal"
+      onKeyDown={[Function]}
+      pattern="[0-9.]*"
+      spellCheck="false"
+    >
+      <div
+        className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+        onClick={[Function]}
+      >
+        <input
+          aria-invalid={false}
+          aria-label="amount-input"
+          autoComplete="off"
+          className="MuiInputBase-input MuiInput-input"
+          disabled={false}
+          id="s-bssare"
+          onAnimationStart={[Function]}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          required={false}
+          type="text"
+          value="0"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Create components snapshots 4`] = `
+<div
+  className="MuiFormControl-root MuiTextField-root undefined makeStyles-menu-177 MuiFormControl-marginNormal"
+>
+  <div
+    className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+    onClick={[Function]}
+  >
+    <div
+      aria-haspopup="listbox"
+      className="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input MuiInputBase-inputSelect"
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+      tabIndex={0}
+    >
+      EUR
+    </div>
+    <input
+      id="standard-select-currency"
+      onAnimationStart={[Function]}
+      type="hidden"
+      value="EUR"
+    />
+    <svg
+      aria-hidden="true"
+      className="MuiSvgIcon-root MuiSelect-icon"
+      focusable="false"
+      role="presentation"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M7 10l5 5 5-5z"
+      />
+    </svg>
+  </div>
+</div>
+`;
+
+exports[`Create components snapshots 5`] = `
+<div
+  className="MuiGrid-root makeStyles-grid-199 MuiGrid-container MuiGrid-justify-xs-center"
+>
+  <button
+    aria-label="exchange"
+    className="MuiButtonBase-root MuiFab-root makeStyles-fab-200 MuiFab-extended MuiFab-secondary"
+    disabled={false}
+    onBlur={[Function]}
+    onDragLeave={[Function]}
+    onFocus={[Function]}
+    onKeyDown={[Function]}
+    onKeyUp={[Function]}
+    onMouseDown={[Function]}
+    onMouseLeave={[Function]}
+    onMouseUp={[Function]}
+    onTouchEnd={[Function]}
+    onTouchMove={[Function]}
+    onTouchStart={[Function]}
+    tabIndex={0}
+    type="button"
+  >
+    <span
+      className="MuiFab-label"
+    >
+      Exchange
+    </span>
+    <span
+      className="MuiTouchRipple-root"
+    />
+  </button>
+</div>
+`;
+
+exports[`Create components snapshots 6`] = `null`;
+
+exports[`Create components snapshots 7`] = `
+<div
+  className="MuiBox-root MuiBox-root-241 makeStyles-rate-239"
+>
+  <span
+    aria-hidden={true}
+    className="material-icons MuiIcon-root MuiIcon-colorPrimary"
+  >
+    show_chart
+  </span>
+  <p
+    className="MuiTypography-root MuiTypography-body2 MuiTypography-colorPrimary"
+  >
+    1 
+    $
+     = 
+    1
+     
+    PLN
+  </p>
+</div>
+`;
+
+exports[`Create components snapshots 8`] = `
+<button
+  className="makeStyles-switchBtn-251"
+>
+  <span
+    aria-hidden={true}
+    className="material-icons MuiIcon-root MuiIcon-colorPrimary"
+  >
+    import_export
+  </span>
+</button>
+`;

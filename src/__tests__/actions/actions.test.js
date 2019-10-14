@@ -18,7 +18,7 @@ import latestGBP from './__calls__/latestGBP.json';
 import latestUSD from './__calls__/latestUSD.json';
 import latestPLN from './__calls__/latestPLN.json';
 
-describe('Revolut Exchange screen App tests', () => {
+describe('Revolut Exchange screen App actions tests', () => {
   let changeLog = [];
   let actionsLog = [];
 

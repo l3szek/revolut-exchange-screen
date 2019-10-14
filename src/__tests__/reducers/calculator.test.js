@@ -3,7 +3,6 @@ import calculatorReducer from '../../reducers/calculator';
 import wallet from '../../utils/userWalletMock.json';
 import { CURRENCY } from '../../constants/common';
 
-
 describe('calculator reducer', () => {
   it('should return the initial state', () => {
     expect(calculatorReducer(undefined, {})).toEqual(

@@ -1,22 +1,5 @@
 // @flow
 
-/**
- * Focus on input field and put cursor after the text
- */
-export const focusOnContentEnd = (input: HTMLInputElement) => {
-  input.focus();
-  // set selection to the end of field content
-  if (input.setSelectionRange) {
-    input.setSelectionRange(input.value.length, input.value.length);
-  } else if (input.createTextRange) {
-    const range = input.createTextRange();
-    range.collapse(true);
-    range.moveEnd('character', input.value.length);
-    range.moveStart('character', input.value.length);
-    range.select();
-  }
-};
-
 export const formatNumber = (value: number, digitsLimit: number = 10) => {
   const val = String(value);
   const parsedValue = val.replace(/[^\d]+/i, '');
@@ -39,9 +22,6 @@ export const getFormattedValue = (currentValue: number) => {
 
   currentVal = currentVal.replace('..', '.');
 
-  if (currentVal === '00') {
-    currentVal = '0';
-  }
   if ((currentVal.length > 1 && currentVal.startsWith('0') && currentVal.charAt(1) !== '.') || currentVal.startsWith('.')) {
     currentVal = currentVal.substr(1);
   }
