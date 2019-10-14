@@ -7,7 +7,7 @@ FX rates are being fetched from `https://exchangeratesapi.io/`.
 ## Installation
 
 - `git clone git@github.com:l3szek/revolut-exchange-screen.git`
-- cd revolut-exchange
+- cd revolut-exchange-screen
 - npm install
 - npm start
 - visit `http://localhost:3000`
