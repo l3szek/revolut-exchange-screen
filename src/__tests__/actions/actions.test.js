@@ -7,8 +7,8 @@ import nock from 'nock';
 import base from '../../utils/testsBase';
 import { CURRENCY, localhost, userWalletApiMock } from '../../constants/common';
 import rootReducer from '../../reducers/rootReducer';
-import * as testModule from '../actions';
-import { types } from '../actionTypes';
+import * as testModule from '../../actions/actions';
+import { types } from '../../actions/actionTypes';
 
 import wallet from '../../utils/userWalletMock.json';
 
@@ -21,10 +21,6 @@ import latestPLN from './__calls__/latestPLN.json';
 describe('Revolut Exchange screen App tests', () => {
   let changeLog = [];
   let actionsLog = [];
-
-  beforeAll(() => {
-    
-  });
 
   afterAll(() => {
     base.afterAll();

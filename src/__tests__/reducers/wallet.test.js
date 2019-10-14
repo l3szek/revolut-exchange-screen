@@ -1,5 +1,5 @@
 import { types } from '../../actions/actionTypes';
-import walletReducer from '../wallet';
+import walletReducer from '../../reducers/wallet';
 import wallet from '../../utils/userWalletMock.json';
 import { CURRENCY } from '../../constants/common';
 
@@ -27,18 +27,18 @@ describe('wallet reducer', () => {
   })
 
   it('should handle UPDATE_WALLET', () => {
-    const currency = 'USD';
+    const currency = CURRENCY.USD;
     const amount = 1000;
     const userWallet = [
       {
-        currency: 'USD',
+        currency,
         availableMoney: 5000000,
         symbol: '$'
       },
     ];
     const updatedWallet = [
       {
-        currency: 'USD',
+        currency,
         availableMoney: amount,
         symbol: '$'
       },
