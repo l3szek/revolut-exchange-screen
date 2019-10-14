@@ -24,9 +24,9 @@ const useStyles = makeStyles(theme => ({
     padding: '20px 20px 0 20px',
   },
   container: {
-    marginTop: 20,
-    marginBottom: 20,
-    background: '#FFFFFF',
+    marginTop: theme.spacing(2.5),
+    marginBottom: theme.spacing(2.5),
+    background: theme.palette.common.white,
     borderRadius: theme.shape,
     paddingLeft: 0,
     paddingRight: 0,
